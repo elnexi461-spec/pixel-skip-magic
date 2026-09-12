@@ -24,7 +24,7 @@
 - Once inside, a dismissible reminder points to the profile page for adding a real name, M-Pesa number, and referral code. The reminder only shows while the phone number is missing.
 - Deposits and withdrawals still ask for an M-Pesa number at the moment of payment, so skipping cannot break money flows.
 
-## Keeping credit use low
+## Keeping credit use 🔅 
 
 - Bulk-copy the repo files in as few steps as possible instead of rewriting them page by page.
 - No redesign, no refactor, no extra features beyond the skip button — only what is listed above.
