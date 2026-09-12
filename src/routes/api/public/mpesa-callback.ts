@@ -27,7 +27,7 @@ export const Route = createFileRoute('/api/public/mpesa-callback')({
     const cb = parsed.data.Body.stkCallback
     const metadata = Object.fromEntries((cb.CallbackMetadata?.Item ?? []).map((item) => [item.Name, item.Value ?? null]))
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-    const rpc = (supabaseAdmin as unknown as PrivateRpcClient).schema('private')
+    const rpc = supabaseAdmin as unknown as PrivateRpcClient
     const operation = cb.ResultCode === 0
       ? rpc.rpc('srv_complete_mpesa_deposit', {
           _checkout_request_id: cb.CheckoutRequestID,
