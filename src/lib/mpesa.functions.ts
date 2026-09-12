@@ -31,7 +31,8 @@ export const initiateMpesaDeposit = createServerFn({ method: 'POST' })
     const shortcode = process.env['MPESA_SHORTCODE']
     const callbackToken = process.env['MPESA_CALLBACK_TOKEN']
     if (!consumerKey || !consumerSecret || !passkey || !shortcode || !callbackToken) {
-      throw new Error('M-Pesa is awaiting merchant credentials')
+      // Expected setup state — returned, not thrown, so the UI can explain it calmly.
+      return { ok: false as const, message: 'M-Pesa deposits are not live yet: the merchant credentials still need to be added.' }
     }
 
     const base = process.env['MPESA_ENVIRONMENT'] === 'production'
@@ -40,9 +41,9 @@ export const initiateMpesaDeposit = createServerFn({ method: 'POST' })
     const authResponse = await fetch(`${base}/oauth/v1/generate?grant_type=client_credentials`, {
       headers: { Authorization: `Basic ${btoa(`${consumerKey}:${consumerSecret}`)}` },
     })
-    if (!authResponse.ok) throw new Error('M-Pesa authentication is unavailable')
+    if (!authResponse.ok) return { ok: false as const, message: 'M-Pesa is unavailable right now. Please try again shortly.' }
     const auth = await authResponse.json() as { access_token?: string }
-    if (!auth.access_token) throw new Error('M-Pesa authentication failed')
+    if (!auth.access_token) return { ok: false as const, message: 'M-Pesa could not verify the merchant account.' }
 
     const now = timestamp()
     const callbackOrigin = process.env['MPESA_CALLBACK_ORIGIN'] ?? 'https://id-preview--e1473516-5933-4d88-9378-53199a0fe675.lovable.app'
@@ -66,7 +67,7 @@ export const initiateMpesaDeposit = createServerFn({ method: 'POST' })
     const result = await response.json() as DarajaResponse
     if (!response.ok || result.ResponseCode !== '0' || !result.CheckoutRequestID) {
       console.error('M-Pesa STK request failed', result.ResponseDescription ?? result.errorMessage)
-      throw new Error(result.errorMessage ?? result.ResponseDescription ?? 'M-Pesa request failed')
+      return { ok: false as const, message: result.errorMessage ?? result.ResponseDescription ?? 'M-Pesa request failed' }
     }
 
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
@@ -81,6 +82,6 @@ export const initiateMpesaDeposit = createServerFn({ method: 'POST' })
       checkout_request_id: result.CheckoutRequestID,
       metadata: { response_description: result.ResponseDescription ?? '' },
     })
-    if (error) throw new Error('Could not record the M-Pesa request')
-    return { checkoutRequestId: result.CheckoutRequestID, message: 'Check your phone and enter your M-Pesa PIN' }
+    if (error) return { ok: false as const, message: 'Could not record the M-Pesa request' }
+    return { ok: true as const, checkoutRequestId: result.CheckoutRequestID, message: 'Check your phone and enter your M-Pesa PIN' }
   })
