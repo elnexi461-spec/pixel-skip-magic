@@ -38,6 +38,19 @@ export const createProfile = createServerFn({ method: 'POST' })
     return profile
   })
 
+export const skipProfileSetup = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ email: z.string().email() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
+    const fallbackName = (data.email.split('@')[0] || 'Farmer').slice(0, 80)
+    const { data: profile, error } = await (supabaseAdmin as unknown as PrivateRpcClient).schema('private').rpc('ensure_my_profile', { _user_id: context.userId, _email: data.email, _phone: null, _display_name: fallbackName.length >= 2 ? fallbackName : 'Farmer', _referral_code: null })
+    if (error) throw new Error(error.message)
+    return profile
+  })
+
+
+
 export const buyPackage = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ packageId: z.number().int().positive() }).parse(input))
