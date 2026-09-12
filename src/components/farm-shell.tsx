@@ -38,7 +38,7 @@ export function FarmShell() {
         <div className="min-w-0"><p className="truncate font-display text-lg capitalize">{path.replace('/', '').replace('-', ' ') || 'Mifugo'}</p><p className="hidden text-xs text-muted-foreground sm:block">Live estate account</p></div>
         <div className="flex items-center gap-2"><span className="hidden rounded-md bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground sm:inline">KES account</span></div>
       </header>
-      <main className="mx-auto w-full max-w-[1440px] px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-10"><Outlet /></main>
+      <main className="mx-auto w-full max-w-[1440px] px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-10"><CompleteProfileNotice /><Outlet /></main>
     </div>
     <nav className="fixed inset-x-3 bottom-3 z-20 grid grid-cols-6 rounded-lg border border-border bg-card/95 p-1.5 shadow-xl backdrop-blur-lg lg:hidden">
       {nav.map((item) => { const active = path === item.to; return <Link key={item.to} to={item.to} className={`flex min-w-0 flex-col items-center gap-1 rounded-md py-2 text-[9px] font-bold ${active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}><item.icon className="size-4"/><span className="truncate">{item.label}</span></Link> })}
