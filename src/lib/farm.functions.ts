@@ -55,8 +55,10 @@ export const buyPackage = createServerFn({ method: 'POST' })
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
     const { data: id, error } = await (supabaseAdmin as unknown as PrivateRpcClient).rpc('srv_purchase_package', { _user_id: context.userId, _package_id: data.packageId })
-    if (error) throw new Error(error.message)
-    return { id }
+    // Expected business rules (e.g. not enough deposit balance) are returned, not thrown,
+    // so the client can show a friendly message instead of a runtime error.
+    if (error) return { ok: false as const, message: error.message }
+    return { ok: true as const, id }
   })
 
 export const collectFarmIncome = createServerFn({ method: 'POST' })
