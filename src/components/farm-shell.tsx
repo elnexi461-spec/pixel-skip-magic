@@ -4,6 +4,25 @@ import { Bird, Home, LogOut, Menu, PawPrint, PiggyBank, UserRound, Users, X } fr
 import { useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { Button } from '@/components/ui/button'
+import { useFarmData } from '@/hooks/use-farm-data'
+
+function CompleteProfileNotice() {
+  const q = useFarmData()
+  const [hidden, setHidden] = useState(false)
+  const profile = q.data?.profile
+  if (hidden || !profile || profile.phone) return null
+  return <div className="mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-md border border-dashed bg-card p-4">
+    <div className="min-w-0">
+      <p className="font-bold">Finish setting up your estate</p>
+      <p className="mt-1 text-xs text-muted-foreground">Add your real name, M-Pesa number and referral code on the profile page.</p>
+    </div>
+    <div className="flex items-center gap-2">
+      <Button asChild size="sm"><Link to="/profile">Add details</Link></Button>
+      <Button variant="ghost" size="icon" aria-label="Dismiss reminder" onClick={() => setHidden(true)}><X /></Button>
+    </div>
+  </div>
+}
+
 
 const nav = [
   { to: '/dashboard', label: 'Estate', icon: Home }, { to: '/shop', label: 'Shop', icon: Bird }, { to: '/farm', label: 'My farm', icon: PawPrint },
