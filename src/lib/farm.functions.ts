@@ -4,9 +4,11 @@ import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware'
 
 const phoneSchema = z.string().regex(/^254\d{9}$/, 'Use a valid Kenyan number starting with 254')
 
+type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
+
 type PrivateRpcClient = {
   schema: (name: string) => {
-    rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>
+    rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: Json; error: { message: string } | null }>
   }
 }
 
