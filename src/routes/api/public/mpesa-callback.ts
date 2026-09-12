@@ -31,14 +31,14 @@ export const Route = createFileRoute('/api/public/mpesa-callback')({
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
     const rpc = (supabaseAdmin as unknown as PrivateRpcClient).schema('private')
     const operation = cb.ResultCode === 0
-      ? rpc.rpc('complete_mpesa_deposit', {
+      ? rpc.rpc('srv_complete_mpesa_deposit', {
           _checkout_request_id: cb.CheckoutRequestID,
           _receipt: String(metadata['MpesaReceiptNumber'] ?? ''),
           _amount: Number(metadata['Amount'] ?? 0),
           _phone: String(metadata['PhoneNumber'] ?? ''),
           _metadata: { merchant_request_id: cb.MerchantRequestID ?? '', result_code: cb.ResultCode },
         })
-      : rpc.rpc('fail_mpesa_deposit', {
+      : rpc.rpc('srv_fail_mpesa_deposit', {
           _checkout_request_id: cb.CheckoutRequestID,
           _reason: cb.ResultDesc,
           _metadata: { merchant_request_id: cb.MerchantRequestID ?? '', result_code: cb.ResultCode },
