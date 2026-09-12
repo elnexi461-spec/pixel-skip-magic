@@ -1,11 +1,14 @@
-# Roadmap
+# Mifugo Farm roadmap
 
-- [x] Enable Lovable Cloud and create secure data model
-- [x] Implement authentication and protected navigation
-- [x] Build responsive customer overview, shop, farm, wallet, referrals, and profile
-- [x] Build protected administration area
-- [ ] Integrate real M-Pesa server flow and callback
-- [x] Generate and integrate cohesive farm and animal visuals
-- [ ] Verify build, security, and responsive behavior
-- [ ] Publish the app
-- [ ] Export the completed project as a downloadable ZIP
+## Done
+- App imported into this Lovable project (pages, styling, assets).
+- Database rebuilt: profiles, roles, packages, investments, transactions, referral commissions, points, row-level security.
+- Server-side farm operations kept in the protected schema; security check clean.
+- Animal package catalogue seeded (free starter duck + 10 paid animals).
+- Email/password sign-in and Google sign-in enabled.
+- Setup screen now has a "Skip for now" action, plus a dismissible reminder to add missing details later.
+- Daily income job scheduled (runs 12:10 AM).
+
+## Open
+- M-Pesa payments need real Daraja credentials before deposits and withdrawals work end to end.
+- No signed-in end-to-end test yet (email confirmation is on, so a real signup is needed).
