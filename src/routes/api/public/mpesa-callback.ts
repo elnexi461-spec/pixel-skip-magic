@@ -14,9 +14,7 @@ const callbackSchema = z.object({
 })
 
 type PrivateRpcClient = {
-  schema: (name: string) => {
-    rpc: (name: string, args: Record<string, unknown>) => Promise<{ error: { message: string } | null }>
-  }
+  rpc: (name: string, args: Record<string, unknown>) => Promise<{ error: { message: string } | null }>
 }
 
 export const Route = createFileRoute('/api/public/mpesa-callback')({

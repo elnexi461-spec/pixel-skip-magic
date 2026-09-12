@@ -7,9 +7,7 @@ const phoneSchema = z.string().regex(/^254\d{9}$/, 'Use a valid Kenyan number st
 type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 type PrivateRpcClient = {
-  schema: (name: string) => {
-    rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: Json; error: { message: string } | null }>
-  }
+  rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: Json; error: { message: string } | null }>
 }
 
 export const getFarmData = createServerFn({ method: 'GET' })
